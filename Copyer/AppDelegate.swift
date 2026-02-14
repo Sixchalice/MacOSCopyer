@@ -79,13 +79,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             } else {
                 targetAppForPaste = nil
             }
-            NSApp.activate(ignoringOtherApps: true)
+            NSApp.activate()
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         }
     }
 
     private func activateTargetAndPaste() {
-        if let target = targetAppForPaste, target.activate(options: .activateIgnoringOtherApps) {
+        if let target = targetAppForPaste, target.activate(options: []) {
             PasteSimulation.simulateCmdV()
         } else {
             PasteSimulation.simulateCmdV()

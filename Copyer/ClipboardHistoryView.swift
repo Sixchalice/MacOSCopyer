@@ -21,24 +21,33 @@ struct ClipboardHistoryView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding()
             } else {
-                List(Array(historyStore.items.enumerated()), id: \.element.id) { index, item in
-                    ClipboardRowView(item: item, isSelected: index == selectedIndex)
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            selectedIndex = index
-                            onSelectItem(historyStore.items[index])
-                        }
+                ScrollViewReader { proxy in
+                    List(Array(historyStore.items.enumerated()), id: \.element.id) { index, item in
+                        ClipboardRowView(item: item, isSelected: index == selectedIndex)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                selectedIndex = index
+                                onSelectItem(historyStore.items[index])
+                            }
+                            .id(index)
+                    }
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .onAppear {
+                        proxy.scrollTo(0, anchor: .top)
+                    }
+                    .onChange(of: selectedIndex) { _, newValue in
+                        proxy.scrollTo(newValue, anchor: .center)
+                    }
                 }
-                .listStyle(.plain)
-                .scrollContentBackground(.hidden)
             }
         }
         .frame(width: 320, height: 400)
-        .focusable()
+        .focusable(!historyStore.items.isEmpty)
         .focused($isFocused)
         .onAppear {
             selectedIndex = 0
-            isFocused = true
+            isFocused = !historyStore.items.isEmpty
         }
         .onKeyPress(.upArrow) {
             if historyStore.items.count > 0 {
