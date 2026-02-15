@@ -31,6 +31,8 @@ final class HistoryStore: ObservableObject {
     static let maxItems = 100
 
     @Published private(set) var items: [ClipboardItem] = []
+    /// Bump when the popover is shown so the view can reset selection to most recent.
+    @Published var popoverDidShowCounter: Int = 0
     var onPasteFromHistory: (() -> Void)?
 
     /// When true, the next clipboard change(s) should be ignored (we just wrote to pasteboard).

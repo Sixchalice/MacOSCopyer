@@ -80,6 +80,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 targetAppForPaste = nil
             }
             NSApp.activate()
+            historyStore.popoverDidShowCounter += 1
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         }
     }

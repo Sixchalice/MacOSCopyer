@@ -39,6 +39,10 @@ struct ClipboardHistoryView: View {
                     .onChange(of: selectedIndex) { _, newValue in
                         proxy.scrollTo(newValue, anchor: .center)
                     }
+                    .onChange(of: historyStore.popoverDidShowCounter) { _, _ in
+                        selectedIndex = 0
+                        proxy.scrollTo(0, anchor: .top)
+                    }
                 }
             }
         }
@@ -48,6 +52,9 @@ struct ClipboardHistoryView: View {
         .onAppear {
             selectedIndex = 0
             isFocused = !historyStore.items.isEmpty
+        }
+        .onChange(of: historyStore.popoverDidShowCounter) { _, _ in
+            selectedIndex = 0
         }
         .onKeyPress(.upArrow) {
             if historyStore.items.count > 0 {
